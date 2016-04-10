@@ -1,9 +1,9 @@
 package test;
 
 import assignment4.Message;
+import assignment4.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.events.EventException;
 
 import static org.junit.Assert.*;
 
@@ -13,15 +13,40 @@ import static org.junit.Assert.*;
 public class MessageTest {
 
     Message message;
-    final String testString = "Are you suggesting coconuts migrate?";
+    User alice;
+    final String TEST_STRING = "Are you suggesting coconuts migrate?";
 
     @Before
     public void setUp() throws Exception {
-        message = new Message(testString);
+        message = new Message(TEST_STRING);
+        alice = new User("Alice");
+        alice.generateDESKey();
     }
 
     @Test
     public void testCreateMessageInstantiatesObjectCorrectly() {
-        assertEquals(testString, message.getContent());
+        assertEquals(TEST_STRING, message.getContent());
     }
+
+    @Test
+    public void testDESEncryptEncryptsMessage() {
+        String content = message.getContent();
+
+        message.desEncrypt(alice.getDESKey());
+        assertNotEquals(content, message.getContent());
+    }
+
+    @Test
+    public void testDESEncryptDecryptEncryptsThenDecryptsCorrectly() {
+        message = new Message(TEST_STRING);
+        String originalPlaintext = message.getContent();
+        message.desEncrypt(alice.getDESKey());
+        String ciphertext = message.getContent();
+        assertNotSame(originalPlaintext, ciphertext);
+
+        message.desDecrypt(alice.getDESKey());
+        String plaintext = message.getContent();
+        assertEquals(originalPlaintext, plaintext);
+    }
+
 }

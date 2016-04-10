@@ -52,7 +52,7 @@ public class UserTest {
     }
 
     @Test
-    public void testGenerateDESKeyCorrectly() {
+    public void testGenerateDESKeyGeneratesKeyCorrectly() {
         user.generateDESKey();
         System.out.println(user.getDESKeyString());
         byte[] key = user.getDESKey().getEncoded();
