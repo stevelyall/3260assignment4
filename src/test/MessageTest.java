@@ -11,6 +11,8 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -57,36 +59,42 @@ public class MessageTest {
         assertEquals(originalPlaintext, plaintext);
     }
 
-    // TODO fix this?
-    @Ignore
+    @Test
+    public void testCalculateMessageDigestCalculatesDigestCorrectly() {
+        message = new Message(TEST_STRING);
+        Message message1 = new Message(TEST_STRING);
+        byte[] digest = message.calculateMessageDigest();
+        byte[] sameDigest = message1.calculateMessageDigest();
+
+        assertEquals(digest.length, sameDigest.length);
+        assertArrayEquals(digest, sameDigest);
+
+        Message message3 = new Message("Different message");
+        byte[] differentDigest = message3.calculateMessageDigest();
+
+        assertFalse(Arrays.equals(digest, differentDigest));
+    }
+
     @Test
     public void testSignGeneratesSignatureCorrectly() {
         message = new Message(TEST_STRING);
         message.desEncrypt(alice.getDESKey());
+        byte[] digest = message.calculateMessageDigest();
 
-
-        message.sign(alice.getRsaKeyPair().getPrivate());
-
+        // get signature
+        PrivateKey alicePriv = alice.getRsaKeyPair().getPrivate();
+        byte[] signature = message.sign(digest, alicePriv);
 
         //decrypt signature to get message digest
         byte[] decryptedSignature = new byte[0];
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1padding");
             cipher.init(Cipher.DECRYPT_MODE, alice.getRsaKeyPair().getPublic());
-            decryptedSignature = cipher.doFinal(message.getSignature());
+            decryptedSignature = cipher.doFinal(signature);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // get message digest from message
-        byte[] checkMD = new byte[0];
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(message.getContent().getBytes());
-            checkMD = md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        assertEquals(checkMD, decryptedSignature);
+        assertArrayEquals(digest, decryptedSignature);
     }
 }

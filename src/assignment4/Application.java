@@ -1,5 +1,8 @@
 package assignment4;
 
+import java.security.PrivateKey;
+import java.security.interfaces.RSAPrivateKey;
+
 public class Application {
 
     public static void main(String[] args) {
@@ -11,6 +14,7 @@ public class Application {
         User alice = new User("Alice");
         User bob = new User("Bob");
 
+        // 1 Alice and Bob generate RSA key pairs
         alice.generateRSAKeyPair();
         bob.generateRSAKeyPair();
 
@@ -26,12 +30,14 @@ public class Application {
 
         System.out.println();
 
+        // 2 Alice generates DES key
         alice.generateDESKey();
         System.out.println(alice.getName());
         printDESKey(alice);
 
         System.out.println();
 
+        // 3 Alice encyrpts message
         Message msg = new Message("Protect your network as if it would be a hotel " +
                 "not as if it would be a castle");
         System.out.println(alice.getName() + ":");
@@ -39,6 +45,13 @@ public class Application {
         msg.desEncrypt(alice.getDESKey());
         printDESKey(alice);
         System.out.println("Ciphertext: " + msg.getContent());
+
+        // 4 Alice digitally signs message
+        PrivateKey keySign = alice.getRsaKeyPair().getPrivate();
+        byte[] messageDigest = msg.calculateMessageDigest();
+
+       // msg.sign(keySign);
+
 
     }
 

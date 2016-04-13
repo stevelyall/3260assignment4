@@ -31,8 +31,13 @@ public class Message {
         }
     }
 
-    public byte[] getSignature() {
-        return signature;
+    public String getSignature() {
+        try {
+            return new String(signature, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void desEncrypt(SecretKey key) {
@@ -46,33 +51,29 @@ public class Message {
 
     }
 
-
-    public void sign(PrivateKey privateKey) {
+    public byte[] calculateMessageDigest() {
+        // get message digest from message content
+        MessageDigest mDigest = null;
         try {
+            mDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        mDigest.update(content);
+        return mDigest.digest();
 
-            // get message digest from message content
-            MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(content);
-            byte[] messageDigest = mDigest.digest();
+    }
 
-//            KeyGenerator generator = KeyGenerator.getInstance("HmacMD5");
-//            SecretKey key = generator.generateKey();
-//            Mac mac = Mac.getInstance("HmacMD5");
-//            mac.init(key);
-//            mac.update(content);
-//
-//            signature = mac.doFinal();
-
+    public byte[] sign(byte[] messageDigest, PrivateKey privateKey) {
+        try {
             // encrypt with sender private key to get digital signature
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1padding");
             cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             signature = cipher.doFinal(messageDigest);
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // TODO
+        return signature;
     }
 }
