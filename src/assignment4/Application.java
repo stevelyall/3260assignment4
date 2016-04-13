@@ -1,5 +1,6 @@
 package assignment4;
 
+import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 
@@ -46,11 +47,16 @@ public class Application {
         printDESKey(alice);
         System.out.println("Ciphertext: " + msg.getContent());
 
+        System.out.println();
+
         // 4 Alice digitally signs message
         PrivateKey keySign = alice.getRsaKeyPair().getPrivate();
         byte[] messageDigest = msg.calculateMessageDigest();
+        byte[] signature = msg.sign(messageDigest, keySign);
 
-       // msg.sign(keySign);
+        System.out.println(alice.getName());
+        printMessageDigest(messageDigest);
+        printDigitalSignature(signature);
 
 
     }
@@ -63,4 +69,23 @@ public class Application {
         System.out.println(user.getRSAKeyPairString());
     }
 
+    private void printMessageDigest(byte[] digest) {
+        String str = "";
+        try {
+            str = new String(digest, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Message digest of the plaintext using SHA-256 is:\n" + str);
+    }
+
+    private void printDigitalSignature(byte[] signature) {
+        String str = "";
+        try {
+            str = new String(signature, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Digitally signed message is:\n" + str);
+    }
 }
