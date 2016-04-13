@@ -45,6 +45,7 @@ public class Application {
     private void printDESKey(User user) {
         System.out.println(user.getDESKeyString());
     }
+
     private void printRSAKeyPair(User user) {
         System.out.println(user.getRSAKeyPairString());
     }
