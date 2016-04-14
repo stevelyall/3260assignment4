@@ -48,6 +48,7 @@ public class Message {
 
     /**
      * gets message digest of the message content
+     *
      * @return byte array containing the message digest
      */
     public byte[] calculateMessageDigest() {
@@ -64,8 +65,9 @@ public class Message {
 
     /**
      * Creates the digital signature for the message
+     *
      * @param messageDigest SHA-256 message digest
-     * @param privateKey sender's private key
+     * @param privateKey    sender's private key
      * @return newly generated signature
      */
     public byte[] sign(byte[] messageDigest, PrivateKey privateKey) {
@@ -76,8 +78,9 @@ public class Message {
 
     /**
      * Checks whether the message digest and the recieved message digest match
+     *
      * @param receivedMessageDigest digest for the recieved message
-     * @param key public key of sender
+     * @param key                   public key of sender
      * @return true if the signature is valid, false otherwise
      */
     public boolean verifyDigitalSignature(byte[] receivedMessageDigest, PublicKey key) {

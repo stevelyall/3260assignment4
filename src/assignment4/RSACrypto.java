@@ -1,12 +1,14 @@
 package assignment4;
 
+import assignment4.interfaces.Crypto;
+
 import javax.crypto.Cipher;
-import java.security.InvalidKeyException;
 import java.security.Key;
 
 /**
- * Created by stevenlyall on 2016-04-14.
+ * Handles RSA encryption and decryption
  */
+
 public class RSACrypto implements Crypto {
     private final String RSA_CIPHER = "RSA/ECB/PKCS1padding";
     private Cipher rsaCipher;

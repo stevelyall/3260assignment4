@@ -14,7 +14,7 @@ public class Application {
 
     public static void main(String[] args) {
         Application app = new Application();
-            app.init();
+        app.init();
     }
 
     private byte[] aliceEncryptDesKey(PublicKey bobPublicKey) {
@@ -94,8 +94,7 @@ public class Application {
 
         if (msg.verifyDigitalSignature(recievedMessageDigest, alice.getRsaKeyPair().getPublic())) {
             System.out.println("Message is signed by Alice!");
-        }
-        else {
+        } else {
             System.out.println("Message is not signed by Alice!");
         }
         System.out.println();

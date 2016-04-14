@@ -1,13 +1,15 @@
 package assignment4;
 
+import assignment4.interfaces.Crypto;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.Key;
 
 /**
- * Created by stevenlyall on 2016-04-10.
+ * Handles DES encryption and decryption
  */
-public class DESCrypto implements Crypto{
+public class DESCrypto implements Crypto {
     private final String DES_CIPHER = "DES/CBC/PKCS5Padding";
     private final byte[] DES_IV = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
     private Cipher desCipher;

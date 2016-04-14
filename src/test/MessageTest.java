@@ -3,14 +3,9 @@ package test;
 import assignment4.Message;
 import assignment4.User;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.Arrays;
 
@@ -22,9 +17,9 @@ import static org.junit.Assert.*;
 
 public class MessageTest {
 
+    final String TEST_STRING = "Are you suggesting coconuts migrate?";
     Message message;
     User alice;
-    final String TEST_STRING = "Are you suggesting coconuts migrate?";
 
     @Before
     public void setUp() throws Exception {
