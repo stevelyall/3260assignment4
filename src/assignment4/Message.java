@@ -1,18 +1,18 @@
 package assignment4;
 
-import com.sun.crypto.provider.HmacMD5KeyGenerator;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
-import javax.crypto.*;
+import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.interfaces.RSAPrivateKey;
+import java.security.PublicKey;
 
 /**
- * Created by stevenlyall on 2016-04-10.
+ * Represents a message sent over the network, including its digital signature.
  */
+
 public class Message {
 
     private byte[] content;
@@ -32,12 +32,7 @@ public class Message {
     }
 
     public String getSignature() {
-        try {
-            return new String(signature, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Base64.encode(signature);
     }
 
     public void desEncrypt(SecretKey key) {
@@ -51,8 +46,11 @@ public class Message {
 
     }
 
+    /**
+     * gets message digest of the message content
+     * @return byte array containing the message digest
+     */
     public byte[] calculateMessageDigest() {
-        // get message digest from message content
         MessageDigest mDigest = null;
         try {
             mDigest = MessageDigest.getInstance("SHA-256");
@@ -64,16 +62,36 @@ public class Message {
 
     }
 
+    /**
+     * Creates the digital signature for the message
+     * @param messageDigest SHA-256 message digest
+     * @param privateKey sender's private key
+     * @return newly generated signature
+     */
     public byte[] sign(byte[] messageDigest, PrivateKey privateKey) {
-        try {
-            // encrypt with sender private key to get digital signature
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1padding");
-            cipher.init(Cipher.ENCRYPT_MODE, privateKey);
-            signature = cipher.doFinal(messageDigest);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        RSACrypto rsaEncrypt = new RSACrypto();
+        signature = rsaEncrypt.encrypt(messageDigest, privateKey);
         return signature;
     }
+
+    /**
+     * Checks whether the message digest and the recieved message digest match
+     * @param receivedMessageDigest digest for the recieved message
+     * @param key public key of sender
+     * @return true if the signature is valid, false otherwise
+     */
+    public boolean verifyDigitalSignature(byte[] receivedMessageDigest, PublicKey key) {
+
+        RSACrypto rsaDecrypt = new RSACrypto();
+        byte[] decryptedSignature = rsaDecrypt.decrypt(this.signature, key);
+        for (int i = 0; i < receivedMessageDigest.length; i++) {
+            if (decryptedSignature[i] != receivedMessageDigest[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
+
+

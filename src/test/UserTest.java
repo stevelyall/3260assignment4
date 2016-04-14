@@ -13,7 +13,7 @@ import java.security.interfaces.RSAPublicKey;
 import static org.junit.Assert.*;
 
 /**
- * Created by stevenlyall on 2016-04-08.
+ * JUnit tests for User
  */
 
 public class UserTest {

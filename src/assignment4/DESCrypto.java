@@ -1,15 +1,13 @@
 package assignment4;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.security.NoSuchAlgorithmException;
+import java.security.Key;
 
 /**
  * Created by stevenlyall on 2016-04-10.
  */
-public class DESCrypto {
+public class DESCrypto implements Crypto{
     private final String DES_CIPHER = "DES/CBC/PKCS5Padding";
     private final byte[] DES_IV = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
     private Cipher desCipher;
@@ -24,7 +22,7 @@ public class DESCrypto {
         }
     }
 
-    public byte[] encrypt(byte[] plaintext, SecretKey key) {
+    public byte[] encrypt(byte[] plaintext, Key key) {
         byte[] ciphertext = new byte[0];
         try {
             desCipher.init(Cipher.ENCRYPT_MODE, key, ivParameter);
@@ -36,7 +34,7 @@ public class DESCrypto {
         return ciphertext;
     }
 
-    public byte[] decrypt(byte[] ciphertext, SecretKey key) {
+    public byte[] decrypt(byte[] ciphertext, Key key) {
         byte[] plaintext = new byte[0];
         try {
             desCipher.init(Cipher.DECRYPT_MODE, key, ivParameter);

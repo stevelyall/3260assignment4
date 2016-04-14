@@ -17,8 +17,9 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 /**
- * Created by stevenlyall on 2016-04-10.
+ * Junit tests for Message
  */
+
 public class MessageTest {
 
     Message message;
